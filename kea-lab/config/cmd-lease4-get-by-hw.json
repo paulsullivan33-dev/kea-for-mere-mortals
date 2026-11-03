@@ -1,0 +1,1 @@
+{"command": "lease4-get-by-hw-address", "service": ["dhcp4"], "arguments": {"hw-address": "02:00:00:00:00:42"}}

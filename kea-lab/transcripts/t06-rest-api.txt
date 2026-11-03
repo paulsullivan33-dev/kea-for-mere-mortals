@@ -1,0 +1,61 @@
+The control agent speaks one way: an HTTP POST of a small JSON
+document. The payloads below are kept in kea-lab/config/cmd-*.json;
+the long form of the first call is shown in full.
+
+$ curl -s -X POST -H "Content-Type: application/json" -d @../config/cmd-version-get.json http://127.0.0.1:18081/
+[ { "arguments": { "extended": "2.4.1\ntarball\nlinked with:\nlog4cplus 2.0.8\nOpenSSL 3.0.13 30 Jan 2024\ndatabase:\nMySQL backend 19.0, library 8.0.46\nPostgreSQL backend 18.0, library 160015\nMemfile backend 3.0" }, "result": 0, "text": "2.4.1" } ]
+$ (same POST) with cmd-status-get.json
+[ { "arguments": { "multi-threading-enabled": true, "packet-queue-size": 64, "packet-queue-statistics": [ 0.0, 0.0, 0.0 ], "pid": 85714, "reload": 51, "sockets": { "status": "ready" }, "thread-pool-size": 4, "uptime": 51 }, "result": 0 } ]
+$ (same POST) with cmd-list-commands.json
+[ { "arguments": [ "build-report", "config-backend-pull", "config-get", "config-hash-get", "config-reload", "config-set", "config-test", "config-write", "dhcp-disable", "dhcp-enable", "lease4-add", "lease4-del", "lease4-get", "lease4-get-all", "lease4-get-by-client-id", "lease4-get-by-hostname", "lease4-get-by-hw-address", "lease4-get-page", "lease4-resend-ddns", "lease4-update", "lease4-wipe", "lease4-write", "lease6-add", "lease6-bulk-apply", "lease6-del", "lease6-get", "lease6-get-all", "lease6-get-by-duid", "lease6-get-by-hostname", "lease6-get-page", "lease6-resend-ddns", "lease6-update", "lease6-wipe", "lease6-write", "leases-reclaim", "libreload", "list-commands", "server-tag-get", "shutdown", "stat-lease4-get", "stat-lease6-get", "statistic-get", "statistic-get-all", "statistic-remove", "statistic-remove-all", "statistic-reset", "statistic-reset-all", "statistic-sample-age-set", "statistic-sample-age-set-all", "statistic-sample-count-set", "statistic-sample-count-set-all", "status-get", "version-get" ], "result": 0 } ]
+$ (same POST) with cmd-config-get.json, first 12 lines, pretty-printed
+[
+    {
+        "arguments": {
+            "Dhcp4": {
+                "allocator": "iterative",
+                "authoritative": false,
+                "boot-file-name": "",
+                "calculate-tee-times": false,
+                "control-socket": {
+                    "socket-name": "/run/kea/kea4-ctrl-socket",
+                    "socket-type": "unix"
+                },
+    ... (the whole running configuration, defaults included)
+
+$ (same POST) with cmd-statistic-get-all.json -- all counters, before any lease exists
+  pkt4-ack-received = 0
+  pkt4-ack-sent = 0
+  pkt4-decline-received = 0
+  pkt4-discover-received = 0
+  pkt4-inform-received = 0
+  pkt4-nak-received = 0
+  pkt4-nak-sent = 0
+  pkt4-offer-received = 0
+  pkt4-offer-sent = 0
+  pkt4-parse-failed = 0
+  pkt4-receive-drop = 0
+  pkt4-received = 0
+  pkt4-release-received = 0
+  pkt4-request-received = 0
+  pkt4-sent = 0
+  pkt4-unknown-received = 0
+  subnet[1].assigned-addresses = 0
+  subnet[1].cumulative-assigned-addresses = 0
+  subnet[1].declined-addresses = 0
+  subnet[1].pool[0].assigned-addresses = 0
+  subnet[1].pool[0].cumulative-assigned-addresses = 0
+  subnet[1].pool[0].declined-addresses = 0
+  subnet[1].pool[0].reclaimed-declined-addresses = 0
+  subnet[1].pool[0].reclaimed-leases = 0
+  subnet[1].pool[0].total-addresses = 51
+  subnet[1].reclaimed-declined-addresses = 0
+  subnet[1].reclaimed-leases = 0
+  subnet[1].total-addresses = 51
+  subnet[1].v4-lease-reuses = 0
+  subnet[1].v4-reservation-conflicts = 0
+
+$ (same POST) with cmd-bogus.json -- an unknown command
+[ { "result": 2, "text": "'no-such-command' command not supported." } ]
+$ curl -s -o /dev/null -w "HTTP %{http_code}" http://127.0.0.1:18081/   (a plain GET)
+HTTP 400

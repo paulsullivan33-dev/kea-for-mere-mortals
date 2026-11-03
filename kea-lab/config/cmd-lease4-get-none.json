@@ -1,0 +1,1 @@
+{"command": "lease4-get", "service": ["dhcp4"], "arguments": {"ip-address": "127.0.1.120"}}

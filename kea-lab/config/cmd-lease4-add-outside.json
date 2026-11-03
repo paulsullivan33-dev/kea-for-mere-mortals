@@ -1,0 +1,1 @@
+{"command": "lease4-add", "service": ["dhcp4"], "arguments": {"ip-address": "10.9.9.9", "hw-address": "02:00:00:00:00:43", "subnet-id": 1}}

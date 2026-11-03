@@ -1,0 +1,40 @@
+$ ls /etc/kea/
+kea-ctrl-agent.conf
+kea-dhcp-ddns.conf
+kea-dhcp4.conf
+
+$ which keactrl; keactrl status
+/bin/bash: line 3: keactrl: command not found
+(Ubuntu packages do not ship keactrl at all. Upstream Kea and ISC's own
+ packages include it; on Ubuntu you run the daemons directly, or via
+ systemd units on a normal install -- this lab has no systemd, so the
+ daemons are started by hand below.)
+
+$ ls /usr/lib/x86_64-linux-gnu/kea/hooks/
+libdhcp_bootp.so
+libdhcp_flex_option.so
+libdhcp_ha.so
+libdhcp_lease_cmds.so
+libdhcp_mysql_cb.so
+libdhcp_pgsql_cb.so
+libdhcp_run_script.so
+libdhcp_stat_cmds.so
+
+$ grep -E "socket-name|http-host|http-port" /etc/kea/kea-dhcp4.conf /etc/kea/kea-ctrl-agent.conf | grep -v "^\s*//"
+/etc/kea/kea-dhcp4.conf:        "socket-name": "/run/kea/kea4-ctrl-socket"
+/etc/kea/kea-ctrl-agent.conf:    "http-host": "127.0.0.1",
+/etc/kea/kea-ctrl-agent.conf:    "http-port": 8000,
+/etc/kea/kea-ctrl-agent.conf:            "socket-name": "/run/kea/kea4-ctrl-socket"
+/etc/kea/kea-ctrl-agent.conf:            "socket-name": "/run/kea/kea6-ctrl-socket"
+/etc/kea/kea-ctrl-agent.conf:            "socket-name": "/run/kea/kea-ddns-ctrl-socket"
+
+$ id _kea
+uid=120(_kea) gid=119(_kea) groups=119(_kea)
+
+$ ls -d /run/kea /var/lib/kea /var/log/kea 2>&1
+ls: cannot access '/run/kea': No such file or directory
+ls: cannot access '/var/lib/kea': No such file or directory
+ls: cannot access '/var/log/kea': No such file or directory
+(Those three directories are created by the systemd units on a real
+ install -- RuntimeDirectory, StateDirectory, LogsDirectory in the unit
+ files. With no systemd here, the lab creates them by hand in t03.)

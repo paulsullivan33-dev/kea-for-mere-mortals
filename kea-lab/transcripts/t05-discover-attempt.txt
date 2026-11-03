@@ -1,0 +1,30 @@
+$ python3 ../dhcp_discover.py
+built DHCPDISCOVER: 250 bytes
+  op=1 (request)  xid=0x3903f326  flags=0x8000 (broadcast)
+  chaddr = 02:00:00:00:00:01  (the reserved client)
+  magic cookie 63 82 53 63, option 53 = 1 (DISCOVER)
+
+sending to 127.0.0.1:67 from a UDP socket bound to port 68 ...
+  bind to 127.0.0.1:68: OK
+  sendto: REFUSED -- [Errno 1] Operation not permitted
+
+Result: the packet is real but undeliverable. The sandbox refuses
+every UDP send (see t02), so no DISCOVER can reach the server and
+no OFFER could come back. The lease dance itself is therefore
+documented-only in this guide; the lease database is exercised
+directly through the control channel instead (t07, t08).
+
+$ timeout 12 perfdhcp -l lo -n 1 -r 1 127.0.0.1 2>&1 | tail -6
+Running: perfdhcp -l lo -n 1 -r 1 127.0.0.1
+Scenario: basic.
+Multi-thread mode enabled.
+
+ERROR: running perfdhcp: Failed to bind socket 3 to 127.0.0.1/port=67
+
+(perfdhcp, ISC's own DHCP load tester from the kea-admin package,
+ wants to bind 127.0.0.1:67 itself and finds the port already held
+ by the running server -- and its normal sending path needs the
+ same raw/UDP access the sandbox refuses, per t02.)
+
+$ grep -c DHCP4_PACKET /var/log/kea/kea-dhcp4.log   (packets received by the server: none can arrive)
+0

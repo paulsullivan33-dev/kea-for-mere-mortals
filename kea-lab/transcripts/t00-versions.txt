@@ -1,0 +1,37 @@
+Installed with: apt-get install -y kea-dhcp4-server kea-ctrl-agent kea-admin kea-dhcp-ddns-server
+(Ubuntu 24.04 packages; the install also pulls in kea-common.)
+
+$ kea-dhcp4 -v
+2.4.1
+$ kea-ctrl-agent -v
+2.4.1
+$ kea-dhcp-ddns -v
+2.4.1
+$ kea-admin -v
+2.4.1
+
+$ dpkg -l | grep ^ii | grep kea
+kea-admin 2.4.1-3ubuntu0.2
+kea-common 2.4.1-3ubuntu0.2
+kea-ctrl-agent 2.4.1-3ubuntu0.2
+kea-dhcp-ddns-server 2.4.1-3ubuntu0.2
+kea-dhcp4-server 2.4.1-3ubuntu0.2
+python3-kea-connector 2.4.1-3ubuntu0.2
+
+$ ls /usr/sbin/ | grep kea
+kea-admin
+kea-ctrl-agent
+kea-dhcp-ddns
+kea-dhcp4
+kea-lfc
+kea-shell
+
+$ kea-dhcp4 -V   (extended version, first lines)
+2.4.1
+tarball
+linked with:
+log4cplus 2.0.8
+OpenSSL 3.0.13 30 Jan 2024
+database:
+MySQL backend 19.0, library 8.0.46
+PostgreSQL backend 18.0, library 160015

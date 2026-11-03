@@ -1,0 +1,30 @@
+$ POST lease4-del for 127.0.1.120
+[ { "result": 0, "text": "IPv4 lease deleted." } ]
+$ POST lease4-get for 127.0.1.120 -- after the delete
+[ { "result": 3, "text": "Lease not found." } ]
+
+$ POST shutdown to dhcp4 (the server stops itself, by command)
+[ { "result": 0, "text": "Shutting down." } ]
+$ pgrep -a kea-dhcp4   (gone)
+  (no kea-dhcp4 process)
+$ POST version-get for dhcp4 via the agent -- the agent is up, the server is not
+[ { "result": 1, "text": "unable to forward command to the dhcp4 service: No such file or directory. The server is likely to be offline" } ]
+
+$ timeout 6 kea-dhcp4 -c ../config/kea-dhcp4-raw-default.conf   (the DEFAULT socket type: raw)
+exit: 124
+$ grep -iE "RAW|SOCKET" /var/log/kea/kea-dhcp4-raw.log | head -4
+2026-11-03 01:28:57.029 INFO  [kea-dhcp4.dhcpsrv/86344.135725978720704] DHCPSRV_CFGMGR_SOCKET_TYPE_SELECT using socket type raw
+2026-11-03 01:28:57.029 INFO  [kea-dhcp4.dhcpsrv/86344.135725978720704] DHCPSRV_CFGMGR_SOCKET_TYPE_DEFAULT "dhcp-socket-type" not specified , using default socket type raw
+2026-11-03 01:28:57.029 INFO  [kea-dhcp4.commands/86344.135725978720704] COMMAND_ACCEPTOR_START Starting to accept connections via unix domain socket bound to /run/kea/kea4-ctrl-socket
+2026-11-03 01:28:57.032 WARN  [kea-dhcp4.dhcpsrv/86344.135725978720704] DHCPSRV_OPEN_SOCKET_FAIL failed to open socket: must not open socket on the loopback interface lo
+
+Reading of the raw attempt: the server process starts and its control
+socket opens, but it refuses to open a raw socket on the loopback
+interface at all -- DHCPSRV_OPEN_SOCKET_FAIL "must not open socket on
+the loopback interface lo". Raw sockets are for real interfaces,
+where broadcast DHCP traffic lives; that is a Kea design rule, and
+on top of it this sandbox would refuse a raw socket anyway (t02).
+
+Teardown: the control agent was stopped last; afterwards no kea
+process remains and neither 67/udp nor the agent's TCP port is
+bound. Every lab server is stopped.

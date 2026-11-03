@@ -1,0 +1,22 @@
+kea-admin is the offline tool for lease databases: initialising,
+upgrading, dumping and uploading. Against a memfile database its
+answers are short and honest -- a memfile already IS a CSV file, so
+there is nothing to dump and no schema to version. kea-admin earns
+its keep with the MySQL and PostgreSQL backends, which this lab
+does not run (see criteria.md).
+
+$ kea-admin db-version memfile -n /var/lib/kea/kea-leases4.csv
+ERROR/kea-admin: NOT IMPLEMENTED
+exit: 1
+  (db-version is not implemented for memfile: a CSV has no schema version.)
+
+$ kea-admin lease-dump memfile -4 -n /var/lib/kea/kea-leases4.csv -o dumped-leases.csv -y
+ERROR/kea-admin: lease-dump is not supported for memfile
+exit: 1
+
+$ cat dumped-leases.csv
+cat: /home/hatch/workspace/kea-labwork/dump/dumped-leases.csv: No such file or directory
+
+$ kea-admin stats-recount memfile -n /var/lib/kea/kea-leases4.csv
+INFO/kea-admin: memfile does not keep lease statistics
+exit: 0

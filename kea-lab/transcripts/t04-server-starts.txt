@@ -1,0 +1,36 @@
+Started by hand (no systemd in the lab, no keactrl in Ubuntu packages):
+  $ mkdir -p /run/kea /var/lib/kea /var/log/kea
+  $ kea-dhcp4 -c ../config/kea-dhcp4-lab.conf &
+
+$ pgrep -a kea-dhcp4
+85714 kea-dhcp4 -c config/kea-dhcp4-lab.conf
+
+$ ss -lunp | grep :67
+UNCONN 0      0                        127.0.0.1:67         0.0.0.0:*    users:(("kea-dhcp4",pid=85714,fd=18))      
+
+$ ls /run/kea/ /var/lib/kea/
+/run/kea/:
+kea-dhcp4-lab.kea-dhcp4.pid
+kea4-ctrl-socket
+kea4-ctrl-socket.lock
+logger_lockfile
+
+/var/lib/kea/:
+kea-leases4.csv
+
+$ cat /var/lib/kea/kea-leases4.csv   (the memfile lease database: header only, no leases yet)
+address,hwaddr,client_id,valid_lifetime,expire,subnet_id,fqdn_fwd,fqdn_rev,hostname,state,user_context,pool_id
+
+$ grep -E "STARTED|ADD_IFACE|ACCEPTOR|MEMFILE_DB" /var/log/kea/kea-dhcp4.log
+2026-11-03 01:27:20.501 INFO  [kea-dhcp4.dhcpsrv/85714.126047843305920] DHCPSRV_CFGMGR_ADD_IFACE listening on interface lo
+2026-11-03 01:27:20.501 INFO  [kea-dhcp4.commands/85714.126047843305920] COMMAND_ACCEPTOR_START Starting to accept connections via unix domain socket bound to /run/kea/kea4-ctrl-socket
+2026-11-03 01:27:20.504 INFO  [kea-dhcp4.dhcpsrv/85714.126047843305920] DHCPSRV_MEMFILE_DB opening memory file lease database: lfc-interval=3600 name=/var/lib/kea/kea-leases4.csv persist=true type=memfile universe=4
+2026-11-03 01:27:20.505 INFO  [kea-dhcp4.dhcp4/85714.126047843305920] DHCP4_STARTED Kea DHCPv4 server version 2.4.1 started
+
+Note what the socket really is: Kea bound a UDP socket on 127.0.0.1:67
+because the config says "dhcp-socket-type": "udp". With the default
+(raw sockets) startup fails in this sandbox -- t09 shows that failure.
+And per t02, no UDP packet can be SENT by anyone here, so the server
+can listen but no client exchange can happen. Everything from here
+on is done over the control channel, which is how you would also
+administer a healthy server on a real network.

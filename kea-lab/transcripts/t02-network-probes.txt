@@ -1,0 +1,26 @@
+$ python3 ../probe_network.py
+== 1. raw socket ==
+raw socket: REFUSED -- [Errno 1] Operation not permitted
+
+== 2. UDP on loopback ==
+UDP loopback: FAILED -- [Errno 1] Operation not permitted
+
+== 3. interfaces ==
+  lo
+  host0
+
+$ ip -brief address
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+host0@if3        UP             198.19.0.2/30 fd8b:4f84:7d32:99::2/64 fe80::70dc:7cff:fe34:2ffd/64 
+
+Refining which UDP operation is refused (python3):
+
+    bind UDP 127.0.0.1:18768: OK
+    sendto: [Errno 1] Operation not permitted
+    TCP bind+listen on loopback: OK
+
+So UDP sockets can be created and bound, but no UDP packet may be
+SENT -- by Kea, by a test client, by anyone in this sandbox. TCP on
+loopback works normally, which is why the control agent's REST API
+(t06) can be exercised in full while the DHCP packet exchange
+cannot. Kea's default raw sockets are refused outright.

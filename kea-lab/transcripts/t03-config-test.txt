@@ -1,0 +1,44 @@
+$ kea-dhcp4 -t ../config/kea-dhcp4-lab.conf
+2026-11-03 01:27:17.899 INFO  [kea-dhcp4.hosts/85672.127757861861824] HOSTS_BACKENDS_REGISTERED the following host backend types are available: mysql postgresql 
+2026-11-03 01:27:17.899 WARN  [kea-dhcp4.dhcpsrv/85672.127757861861824] DHCPSRV_MT_DISABLED_QUEUE_CONTROL disabling dhcp queue control when multi-threading is enabled.
+2026-11-03 01:27:17.899 WARN  [kea-dhcp4.dhcp4/85672.127757861861824] DHCP4_RESERVATIONS_LOOKUP_FIRST_ENABLED Multi-threading is enabled and host reservations lookup is always performed first.
+2026-11-03 01:27:17.901 INFO  [kea-dhcp4.hooks/85672.127757861861824] HOOKS_LIBRARY_CLOSED hooks library /usr/lib/x86_64-linux-gnu/kea/hooks/libdhcp_lease_cmds.so successfully closed
+2026-11-03 01:27:17.902 INFO  [kea-dhcp4.hooks/85672.127757861861824] HOOKS_LIBRARY_CLOSED hooks library /usr/lib/x86_64-linux-gnu/kea/hooks/libdhcp_stat_cmds.so successfully closed
+2026-11-03 01:27:17.902 INFO  [kea-dhcp4.dhcpsrv/85672.127757861861824] DHCPSRV_CFGMGR_NEW_SUBNET4 a new subnet has been added to configuration: 127.0.0.0/8 with params: t1=3600, t2=6300, valid-lifetime=7200
+2026-11-03 01:27:17.903 INFO  [kea-dhcp4.dhcpsrv/85672.127757861861824] DHCPSRV_CFGMGR_SOCKET_TYPE_SELECT using socket type raw
+2026-11-03 01:27:17.903 INFO  [kea-dhcp4.dhcpsrv/85672.127757861861824] DHCPSRV_CFGMGR_SOCKET_TYPE_SELECT using socket type udp
+2026-11-03 01:27:17.903 INFO  [kea-dhcp4.dhcpsrv/85672.127757861861824] DHCPSRV_CFGMGR_ADD_IFACE listening on interface lo
+exit: 0
+
+$ kea-dhcp4 -T ../config/kea-dhcp4-lab.conf   (the deeper check -- also loads the hook libraries)
+2026-11-03 01:27:17.923 INFO  [kea-dhcp4.hooks/85682.128228478630336] HOOKS_LIBRARY_CLOSED hooks library /usr/lib/x86_64-linux-gnu/kea/hooks/libdhcp_lease_cmds.so successfully closed
+2026-11-03 01:27:17.923 INFO  [kea-dhcp4.hooks/85682.128228478630336] HOOKS_LIBRARY_CLOSED hooks library /usr/lib/x86_64-linux-gnu/kea/hooks/libdhcp_stat_cmds.so successfully closed
+2026-11-03 01:27:17.924 INFO  [kea-dhcp4.dhcpsrv/85682.128228478630336] DHCPSRV_CFGMGR_NEW_SUBNET4 a new subnet has been added to configuration: 127.0.0.0/8 with params: t1=3600, t2=6300, valid-lifetime=7200
+2026-11-03 01:27:17.924 INFO  [kea-dhcp4.dhcpsrv/85682.128228478630336] DHCPSRV_MEMFILE_DB opening memory file lease database: lfc-interval=3600 name=/var/lib/kea/kea-leases4.csv persist=true type=memfile universe=4
+2026-11-03 01:27:17.924 INFO  [kea-dhcp4.dhcpsrv/85682.128228478630336] DHCPSRV_MEMFILE_LEASE_FILE_LOAD loading leases from file /var/lib/kea/kea-leases4.csv
+2026-11-03 01:27:17.924 INFO  [kea-dhcp4.dhcpsrv/85682.128228478630336] DHCPSRV_MEMFILE_EXTRACT_EXTENDED_INFO4 extracting extended info saw 0 leases, extended info sanity checks modified 0 / updated 0 leases and 0 leases have relay or remote id
+2026-11-03 01:27:17.925 INFO  [kea-dhcp4.dhcpsrv/85682.128228478630336] DHCPSRV_MEMFILE_LFC_SETUP setting up the Lease File Cleanup interval to 3600 sec
+2026-11-03 01:27:17.925 INFO  [kea-dhcp4.dhcpsrv/85682.128228478630336] DHCPSRV_CFGMGR_SOCKET_TYPE_SELECT using socket type raw
+2026-11-03 01:27:17.925 INFO  [kea-dhcp4.dhcpsrv/85682.128228478630336] DHCPSRV_CFGMGR_SOCKET_TYPE_SELECT using socket type udp
+2026-11-03 01:27:17.925 INFO  [kea-dhcp4.dhcpsrv/85682.128228478630336] DHCPSRV_CFGMGR_ADD_IFACE listening on interface lo
+2026-11-03 01:27:17.926 INFO  [kea-dhcp4.lease-cmds-hooks/85682.128228478630336] LEASE_CMDS_INIT_OK loading Lease Commands hooks library successful
+2026-11-03 01:27:17.926 INFO  [kea-dhcp4.hooks/85682.128228478630336] HOOKS_LIBRARY_LOADED hooks library /usr/lib/x86_64-linux-gnu/kea/hooks/libdhcp_lease_cmds.so successfully loaded
+2026-11-03 01:27:17.926 INFO  [kea-dhcp4.stat-cmds-hooks/85682.128228478630336] STAT_CMDS_INIT_OK loading Stat Commands hooks library successful
+2026-11-03 01:27:17.926 INFO  [kea-dhcp4.hooks/85682.128228478630336] HOOKS_LIBRARY_LOADED hooks library /usr/lib/x86_64-linux-gnu/kea/hooks/libdhcp_stat_cmds.so successfully loaded
+2026-11-03 01:27:17.926 INFO  [kea-dhcp4.stat-cmds-hooks/85682.128228478630336] STAT_CMDS_DEINIT_OK unloading Stat Commands hooks library successful
+2026-11-03 01:27:17.926 INFO  [kea-dhcp4.lease-cmds-hooks/85682.128228478630336] LEASE_CMDS_DEINIT_OK unloading Lease Commands hooks library successful
+2026-11-03 01:27:17.927 INFO  [kea-dhcp4.hooks/85682.128228478630336] HOOKS_LIBRARY_CLOSED hooks library /usr/lib/x86_64-linux-gnu/kea/hooks/libdhcp_stat_cmds.so successfully closed
+2026-11-03 01:27:17.927 INFO  [kea-dhcp4.hooks/85682.128228478630336] HOOKS_LIBRARY_CLOSED hooks library /usr/lib/x86_64-linux-gnu/kea/hooks/libdhcp_lease_cmds.so successfully closed
+exit: 0
+
+$ kea-ctrl-agent -t ../config/kea-ctrl-agent-lab.conf
+2026-11-03 01:27:17.948 INFO  [kea-ctrl-agent.dctl/85688.128879862802304] DCTL_CONFIG_CHECK_COMPLETE server has completed configuration check: listening on 127.0.0.1, port 18081, control sockets: dhcp4, 0 lib(s):, result: success(0), text=Configuration check successful
+exit: 0
+
+$ kea-dhcp4 -t ../config/kea-dhcp4-broken.conf   (deliberately wrong: pool 10.9.9.x inside subnet 127.0.0.0/8)
+2026-11-03 01:27:17.977 ERROR [kea-dhcp4.dhcp4/85693.124601875024320] DHCP4_PARSER_FAIL failed to create or run parser for configuration element subnet4: subnet configuration failed: a pool of type V4, with the following address range: 10.9.9.100-10.9.9.150 does not match the prefix of a subnet: 127.0.0.0/8 to which it is being added (../config/kea-dhcp4-broken.conf:1:178)
+Error encountered: subnet configuration failed: a pool of type V4, with the following address range: 10.9.9.100-10.9.9.150 does not match the prefix of a subnet: 127.0.0.0/8 to which it is being added (../config/kea-dhcp4-broken.conf:1:178)
+
+(And the lab's own first mistake, kept as evidence: the loggers section
+ wants "output_options" with an underscore, not "output-options":
+   Syntax check failed: got unexpected keyword "output-options" in loggers map, exit 1.)

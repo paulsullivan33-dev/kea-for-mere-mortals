@@ -1,0 +1,1 @@
+{"command": "shutdown", "service": ["dhcp4"], "arguments": {"exit-value": 0}}

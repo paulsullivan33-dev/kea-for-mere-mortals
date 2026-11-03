@@ -1,0 +1,41 @@
+Leases, worked through the API (the lease_cmds hook library from the
+config is what makes these commands exist). All payloads are the
+cmd-lease4-*.json files in kea-lab/config/.
+
+$ POST lease4-get for 127.0.1.120 -- before any lease exists
+[ { "result": 3, "text": "Lease not found." } ]
+$ POST lease4-add -- 127.0.1.120 to hw-address 02:00:00:00:00:42, hostname lab-laptop, 3600 s
+[ { "result": 0, "text": "Lease for address 127.0.1.120, subnet-id 1 added." } ]
+$ POST lease4-get for 127.0.1.120 -- now
+[ { "arguments": { "cltt": 1793669304, "fqdn-fwd": false, "fqdn-rev": false, "hostname": "lab-laptop", "hw-address": "02:00:00:00:00:42", "ip-address": "127.0.1.120", "state": 0, "subnet-id": 1, "valid-lft": 7200 }, "result": 0, "text": "IPv4 lease found." } ]
+$ POST lease4-get-by-hw-address 02:00:00:00:00:42
+[ { "arguments": { "leases": [ { "cltt": 1793669304, "fqdn-fwd": false, "fqdn-rev": false, "hostname": "lab-laptop", "hw-address": "02:00:00:00:00:42", "ip-address": "127.0.1.120", "state": 0, "subnet-id": 1, "valid-lft": 7200 } ] }, "result": 0, "text": "1 IPv4 lease(s) found." } ] ...
+$ POST lease4-get-all for subnet 1 (count of leases returned)
+ leases: 1 | result: 0
+$ POST stat-lease4-get for subnet 1
+[
+    {
+        "arguments": {
+            "result-set": {
+                "columns": [
+                    "subnet-id",
+                    "total-addresses",
+                    "cumulative-assigned-addresses",
+                    "assigned-addresses",
+                    "declined-addresses"
+                ],
+                "rows": [
+                    [
+                        1,
+                        51,
+                        0,
+                        1,
+                        0
+                    ]
+                ],
+$ POST lease4-add for 10.9.9.9 -- an address outside subnet 1
+[ { "result": 4, "text": "The address 10.9.9.9 does not belong to subnet 127.0.0.0/8, subnet-id=1" } ]
+
+$ cat /var/lib/kea/kea-leases4.csv   (the memfile on disk, after the add)
+address,hwaddr,client_id,valid_lifetime,expire,subnet_id,fqdn_fwd,fqdn_rev,hostname,state,user_context,pool_id
+127.0.1.120,02:00:00:00:00:42,,7200,1793676504,1,0,0,lab-laptop,0,,0

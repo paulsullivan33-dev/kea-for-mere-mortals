@@ -1,0 +1,1 @@
+{"command": "lease4-add", "service": ["dhcp4"], "arguments": {"ip-address": "127.0.1.120", "hw-address": "02:00:00:00:00:42", "hostname": "lab-laptop", "valid-lifetime": 3600, "subnet-id": 1}}
